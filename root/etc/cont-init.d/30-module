@@ -1,0 +1,19 @@
+#!/usr/bin/with-contenv bash
+
+mkdir -p /config/{templates,coredns}
+
+# install userspace implementation if necessary
+if ! hash wiregaurd-go &> /dev/null; then
+  echo "**** Installing userspace ****"
+  cd /tmp
+  curl -O -q https://dl.google.com/go/go1.17.5.linux-amd64.tar.gz
+  tar zxf go1.17.5.linux-amd64.tar.gz
+  mv go /opt/go1.17.5
+  ln -s /opt/go1.17.5/bin/go /usr/local/bin/go
+
+  cd /usr/local/src
+  git clone -q https://git.zx2c4.com/wireguard-go
+  cd wireguard-go
+  make
+  cp wireguard-go /usr/local/bin
+fi
